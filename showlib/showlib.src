@@ -1,0 +1,11 @@
+metax = include_lib("/lib/metaxploit.so")
+
+// get file object of "/lib"
+file = get_shell("root", params[0]).host_computer.File("/lib")
+// get list of file objects
+files = file.get_files
+for f in files
+    if f.name.indexOf(".so") != null then
+        print(f.name + ": v" + metax.load(f.path).version)
+    end if
+end for

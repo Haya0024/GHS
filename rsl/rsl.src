@@ -1,0 +1,34 @@
+if params.len != 2 or params[0] == "-h" or params[0] == "--help" then exit("<b>Usage: "+program_path.split("/")[-1]+" [ip_address] [port]</b>")
+metaxploit = include_lib("/lib/metaxploit.so")
+if not metaxploit then
+    metaxploit = include_lib(current_path + "/metaxploit.so")
+end if
+if not metaxploit then exit("Error: Can't find metaxploit library in the /lib path or the current folder")
+address = params[0]
+port = params[1].to_int
+net_session = metaxploit.net_use( address, port )
+if not net_session then exit("Error: can't connect to net session")
+metaLib = net_session.dump_lib
+
+scanres = metaxploit.scan(metaLib)
+
+print(metaLib.lib_name + ": v" + metaLib.version)
+
+while true
+	i = 1
+	for area in scanres
+		print(i + ": memory area " + area)
+		i = i + 1
+	end for
+	idx = user_input("Choose memory area or type 0 to end: ")
+	if scanres.hasIndex(idx.to_int) == 0 then
+		print("invalid area")
+	else if idx.to_int != 0 then
+		scanaddr = metaxploit.scan_address(metaLib, scanres[idx.to_int - 1])
+		print(scanaddr)
+	else if idx.to_int == 0 then
+		break
+	end if
+end while
+
+exit("Program ended")

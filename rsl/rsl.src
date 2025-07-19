@@ -20,15 +20,18 @@ while true
 		print(i + ": memory area " + area)
 		i = i + 1
 	end for
-	idx = user_input("Choose memory area or type 0 to end: ")
-	if scanres.hasIndex(idx.to_int) == 0 then
+	idx = user_input("Choose memory area or type 0 to exit: ")
+	idx = idx.to_int
+	if scanres.hasIndex(idx) == 0 then
 		print("invalid area")
-	else if idx.to_int != 0 then
-		scanaddr = metaxploit.scan_address(metaLib, scanres[idx.to_int - 1])
+	else if idx != 0 then
+		scanaddr = metaxploit.scan_address(metaLib, scanres[idx - 1])
 		print(scanaddr)
-	else if idx.to_int == 0 then
+	else if idx == 0 then
 		break
 	end if
 end while
 
 exit("Program ended")
+
+
